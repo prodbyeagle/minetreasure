@@ -15,6 +15,7 @@ export type MT_ITEM = {
      components?: any;
      enchantments?: MT_ENCHANTMENT[];
      attributes?: MT_ATTRIBUTE[];
+     chances?: number[];
      conditions: {
           stoneMined?: {
                min?: number;

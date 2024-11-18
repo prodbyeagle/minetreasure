@@ -1,53 +1,104 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import Image from 'next/image';
 import Navbar from '@/components/Navbar';
-import { Search, Filter, X } from 'lucide-react';
+import ItemModal from '@/components/ItemModal';
+import { Search, Filter, X, Info, HelpCircle } from 'lucide-react';
 import treasureData from '@/data/data.json';
+import initialChances from '@/data/initialChances.json';
+import firstObtainAdvancements from '@/data/firstObtainAdvancements.json';
 import type { MT_DATA, MT_ITEM } from '@/types/types';
+
+// Debounce helper
+const useDebounce = (value: any, delay: number) => {
+     const [debouncedValue, setDebouncedValue] = useState(value);
+
+     useEffect(() => {
+          const handler = setTimeout(() => {
+               setDebouncedValue(value);
+          }, delay);
+
+          return () => {
+               clearTimeout(handler);
+          };
+     }, [value, delay]);
+
+     return debouncedValue;
+};
 
 export default function LootPage() {
      const [searchQuery, setSearchQuery] = useState('');
      const [selectedRarities, setSelectedRarities] = useState<string[]>([]);
      const [selectedBiomes, setSelectedBiomes] = useState<string[]>([]);
+     const [blockRange, setBlockRange] = useState<[number, number]>([0, 100000]);
+     const [visualBlockRange, setVisualBlockRange] = useState<[number, number]>([0, 100000]);
      const [showFilters, setShowFilters] = useState(false);
-     const [filteredData, setFilteredData] = useState<MT_DATA>(treasureData);
+     const [selectedItem, setSelectedItem] = useState<MT_ITEM | null>(null);
+     const [chanceRanges, setChanceRanges] = useState({
+          common: initialChances.common,
+          rare: initialChances.rare,
+          epic: initialChances.epic,
+          legendary: initialChances.legendary
+     });
+     const [customItemsOnly, setCustomItemsOnly] = useState(false);
+     const [listView, setListView] = useState(false);
+
+     // Debounce values
+     const debouncedSearch = useDebounce(searchQuery, 300);
+     const debouncedBlockRange = useDebounce(blockRange, 300);
+     const debouncedChanceRanges = useDebounce(chanceRanges, 300);
+
+     // Update visual range immediately but debounce actual filter
+     const handleBlockRangeChange = (value: number) => {
+          const newRange: [number, number] = [0, value];
+          setVisualBlockRange(newRange);
+          setBlockRange(newRange);
+     };
+
+     const handleChanceRangeChange = (rarity: string, value: string) => {
+          const numValue = parseInt(value) || 0;
+          setChanceRanges(prev => ({
+               ...prev,
+               [rarity]: numValue
+          }));
+     };
 
      const RARITIES = ['common', 'rare', 'epic', 'legendary'];
-     const BIOMES = Object.keys(treasureData).map(biome =>
-          biome.replace(/_treasure$/, '').replace(/_/g, ' ')
-     );
+     const BIOMES = useMemo(() =>
+          Object.keys(treasureData).map(biome =>
+               biome.replace(/_treasure$/, '').replace(/_/g, ' ')
+          ), []);
 
-     const toggleRarity = (rarity: string) => {
+     // Memoize toggle functions
+     const toggleRarity = useCallback((rarity: string) => {
           setSelectedRarities(prev =>
                prev.includes(rarity)
                     ? prev.filter(r => r !== rarity)
                     : [...prev, rarity]
           );
-     };
+     }, []);
 
-     const toggleBiome = (biome: string) => {
+     const toggleBiome = useCallback((biome: string) => {
           const formattedBiome = biome.replace(/ /g, '_') + '_treasure';
           setSelectedBiomes(prev =>
                prev.includes(formattedBiome)
                     ? prev.filter(b => b !== formattedBiome)
                     : [...prev, formattedBiome]
           );
-     };
+     }, []);
 
-     const clearFilters = () => {
+     const clearFilters = useCallback(() => {
           setSelectedRarities([]);
           setSelectedBiomes([]);
           setSearchQuery('');
-     };
+          setBlockRange([0, 500000]);
+     }, []);
 
-     // Filter data based on search query and selected filters
-     useEffect(() => {
+     const filteredData = useMemo(() => {
           const filtered: MT_DATA = {};
-
-          // Filter biomes
           const biomesToShow = selectedBiomes.length > 0
                ? selectedBiomes
                : Object.keys(treasureData);
@@ -57,7 +108,6 @@ export default function LootPage() {
                if (biomeData) {
                     filtered[biome] = {};
 
-                    // Filter rarities
                     const raritiesToShow = selectedRarities.length > 0
                          ? selectedRarities
                          : RARITIES;
@@ -67,24 +117,59 @@ export default function LootPage() {
                          if (rarityData) {
                               filtered[biome][rarity] = rarityData.filter((item: MT_ITEM) => {
                                    const searchString = item.name?.toLowerCase() || item.type.replace(/_/g, ' ').toLowerCase();
-                                   return searchString.includes(searchQuery.toLowerCase());
+                                   const stoneMined = item.conditions.stoneMined;
+                                   const inBlockRange = !stoneMined || (
+                                        (!stoneMined.min || stoneMined.min <= debouncedBlockRange[1]) &&
+                                        (!stoneMined.max || stoneMined.max >= debouncedBlockRange[0])
+                                   );
+
+                                   // Check chance ranges
+                                   const itemChances = item.chances?.[0];
+                                   const inChanceRange = !itemChances || (
+                                        itemChances[rarity as keyof typeof itemChances] <= debouncedChanceRanges[rarity as keyof typeof debouncedChanceRanges]
+                                   );
+
+                                   // Check if custom item
+                                   const isCustom = item.name !== undefined;
+                                   const passesCustomFilter = !customItemsOnly || isCustom;
+
+                                   return searchString.includes(debouncedSearch.toLowerCase()) &&
+                                        inBlockRange &&
+                                        inChanceRange &&
+                                        passesCustomFilter;
                               });
                          }
                     });
                }
           });
 
-          setFilteredData(filtered);
-     }, [searchQuery, selectedRarities, selectedBiomes, RARITIES]);
+          return filtered;
+     }, [debouncedSearch, selectedRarities, selectedBiomes, debouncedBlockRange, debouncedChanceRanges, customItemsOnly, RARITIES]);
 
-     const getItemImage = (item: MT_ITEM) => {
+     const getItemImage = useCallback((item: MT_ITEM) => {
           return `/items/${item.type}.png`;
+     }, []);
+
+     // Helper function to check if item has modal-worthy data
+     const hasModalData = (item: MT_ITEM) => {
+          return (
+               (item.lore && item.lore.length > 0) ||
+               (item.enchantments && item.enchantments.length > 0) ||
+               (item.components && Object.keys(item.components).length > 0)
+          );
+     };
+
+     // Helper function to get block range text
+     const getBlockRangeText = (item: MT_ITEM) => {
+          if (!item.conditions.stoneMined) return null;
+          const min = item.conditions.stoneMined.min || 0;
+          const max = item.conditions.stoneMined.max;
+          return `${min.toLocaleString()} - ${max?.toLocaleString()} blocks`;
      };
 
      return (
           <main className="min-h-screen bg-white dark:bg-zinc-900">
                <Navbar />
-
                <div className="pt-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                     {/* Header */}
                     <div className="text-center mb-12">
@@ -168,6 +253,81 @@ export default function LootPage() {
                                              ))}
                                         </div>
                                    </div>
+
+                                   <div className="p-4 mt-8 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                                        <div className="mt-6">
+                                             <h4 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Blocks Mined</h4>
+                                             <div className="px-2">
+                                                  <input
+                                                       type="range"
+                                                       min="0"
+                                                       max="500000"
+                                                       value={visualBlockRange[1]}
+                                                       onChange={(e) => handleBlockRangeChange(parseInt(e.target.value))}
+                                                       className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-zinc-500 dark:accent-zinc-400"
+                                                  />
+                                                  <div className="flex justify-between mt-2">
+                                                       <span className="text-xs text-zinc-500 dark:text-zinc-400">0</span>
+                                                       <span className="text-xs text-zinc-500 dark:text-zinc-400">{visualBlockRange[1].toLocaleString()}</span>
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+
+                                   {/* Chance Filters */}
+                                   <div className="mt-8">
+                                        <h4 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Chance Filters</h4>
+                                        <div className="grid grid-cols-4 gap-4">
+                                             {RARITIES.map(rarity => (
+                                                  <div key={rarity} className="flex flex-col">
+                                                       <label className="text-xs text-zinc-500 dark:text-zinc-400 mb-1 capitalize">
+                                                            {rarity}
+                                                       </label>
+                                                       <input
+                                                            type="number"
+                                                            min="0"
+                                                            value={chanceRanges[rarity as keyof typeof chanceRanges]}
+                                                            onChange={(e) => handleChanceRangeChange(rarity, e.target.value)}
+                                                            className="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-lg text-sm text-zinc-900 dark:text-white"
+                                                       />
+                                                  </div>
+                                             ))}
+                                        </div>
+                                   </div>
+
+                                   {/* Custom Items Toggle */}
+                                   <div className="mt-8">
+                                        <label className="flex items-center justify-between p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                                             <span className="text-sm font-medium text-zinc-900 dark:text-white">Custom Items Only</span>
+                                             <button
+                                                  onClick={() => setCustomItemsOnly(!customItemsOnly)}
+                                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${customItemsOnly ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-zinc-700'
+                                                       }`}
+                                             >
+                                                  <span
+                                                       className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 transition-transform ${customItemsOnly ? 'translate-x-6' : 'translate-x-1'
+                                                            }`}
+                                                  />
+                                             </button>
+                                        </label>
+                                   </div>
+
+                                   {/* View Toggle */}
+                                   <div className="mt-4">
+                                        <label className="flex items-center justify-between p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                                             <span className="text-sm font-medium text-zinc-900 dark:text-white">List View</span>
+                                             <button
+                                                  onClick={() => setListView(!listView)}
+                                                  className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${listView ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-zinc-700'
+                                                       }`}
+                                             >
+                                                  <span
+                                                       className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 transition-transform ${listView ? 'translate-x-6' : 'translate-x-1'
+                                                            }`}
+                                                  />
+                                             </button>
+                                        </label>
+                                   </div>
                               </div>
                          )}
                     </div>
@@ -206,53 +366,142 @@ export default function LootPage() {
                          </div>
                     )}
 
-                    {/* Loot Grid */}
-                    <div className="space-y-8">
-                         {Object.entries(filteredData).map(([biome, rarities]) => {
-                              // Skip biomes with no items
-                              if (Object.values(rarities).every(items => items.length === 0)) return null;
+                    {/* Modal */}
+                    {selectedItem && (
+                         <ItemModal
+                              item={selectedItem}
+                              onClose={() => setSelectedItem(null)}
+                              getItemImage={getItemImage}
+                         />
+                    )}
 
+                    {/* Loot Grid/List */}
+                    {Object.entries(filteredData).map(([biome, rarities]) => {
+                         if (Object.values(rarities).some(items => items.length > 0)) {
+                              const biomeAdvancement = firstObtainAdvancements[biome as keyof typeof firstObtainAdvancements];
                               return (
                                    <div key={biome} className="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-6">
-                                        <h2 className="text-2xl font-bold text-zinc-900 dark:text-white mb-4 capitalize">
-                                             {biome.replace(/_treasure$/, '').replace(/_/g, ' ')}
-                                        </h2>
-                                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                             {Object.entries(rarities).map(([rarity, items]) =>
-                                                  items.map((item, index) => (
-                                                       <div
-                                                            key={`${biome}-${rarity}-${index}`}
-                                                            className="p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800"
-                                                       >
-                                                            <div className="aspect-square rounded-lg bg-zinc-100 dark:bg-zinc-700 mb-4 flex items-center justify-center">
-                                                                 <Image
-                                                                      src={getItemImage(item)}
-                                                                      alt={item.name || item.type}
-                                                                      width={64}
-                                                                      height={64}
-                                                                      className="w-16 h-16 object-contain"
-                                                                 />
+                                        <div className="flex items-center gap-2 mb-4">
+                                             <h2 className="text-2xl font-bold text-zinc-900 dark:text-white capitalize">
+                                                  {biome.replace(/_treasure$/, '').replace(/_/g, ' ')}
+                                             </h2>
+                                             {biomeAdvancement && (
+                                                  <div className="group relative">
+                                                       <HelpCircle className="w-5 h-5 text-zinc-400 cursor-help" />
+                                                       <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-72 p-4 rounded-lg bg-white dark:bg-zinc-800 shadow-xl border border-zinc-200 dark:border-zinc-700 invisible group-hover:visible transition-all opacity-0 group-hover:opacity-100">
+                                                            <div className="space-y-4">
+                                                                 {Object.entries(biomeAdvancement).map(([rarity, advancement]) => (
+                                                                      <div key={rarity}>
+                                                                           <h3 className="font-medium text-sm capitalize text-zinc-900 dark:text-white">
+                                                                                {advancement.title}
+                                                                           </h3>
+                                                                           <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                                                {advancement.description}
+                                                                           </p>
+                                                                      </div>
+                                                                 ))}
                                                             </div>
-                                                            <h3 className="font-medium text-zinc-900 dark:text-white mb-1">
-                                                                 {item.name || item.type.replace(/_/g, ' ')}
-                                                            </h3>
-                                                            <p className="text-sm text-zinc-500 dark:text-zinc-400 capitalize">
-                                                                 {rarity} • {biome.replace(/_treasure$/, '').replace(/_/g, ' ')}
-                                                            </p>
-                                                            {item.conditions.stoneMined && (
-                                                                 <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-2">
-                                                                      {item.conditions.stoneMined.min && `Min: ${item.conditions.stoneMined.min.toLocaleString()} blocks`}
-                                                                      {item.conditions.stoneMined.max && `Max: ${item.conditions.stoneMined.max.toLocaleString()} blocks`}
-                                                                 </p>
-                                                            )}
                                                        </div>
-                                                  ))
+                                                  </div>
                                              )}
                                         </div>
+                                        {!listView ? (
+                                             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                  {Object.entries(rarities).map(([rarity, items]) =>
+                                                       items.map((item, index) => (
+                                                            <div
+                                                                 key={`${biome}-${rarity}-${index}`}
+                                                                 onClick={() => hasModalData(item) ? setSelectedItem(item) : null}
+                                                                 className={`flex flex-col items-center p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''
+                                                                      } relative group`}
+                                                            >
+                                                                 <div className="bg-zinc-100 dark:bg-zinc-900 p-4 rounded-lg mb-3">
+                                                                      <Image
+                                                                           src={getItemImage(item)}
+                                                                           alt={item.name || item.type}
+                                                                           width={48}
+                                                                           height={48}
+                                                                           className="w-12 h-12 object-contain"
+                                                                      />
+                                                                 </div>
+                                                                 <div className="text-center">
+                                                                      {hasModalData(item) && (
+                                                                           <Info className="absolute top-2 right-2 w-4 h-4 text-zinc-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                                                      )}
+                                                                      <p className="text-xs font-medium text-zinc-900 dark:text-white truncate">
+                                                                           {item.name || item.type.replace(/_/g, ' ')}
+                                                                      </p>
+                                                                      <p className={`text-xs capitalize ${rarity === 'common' ? 'text-zinc-500 dark:text-zinc-400' :
+                                                                           rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                                                rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                                                     'text-yellow-500 dark:text-yellow-400'
+                                                                           }`}>
+                                                                           {rarity}
+                                                                      </p>
+                                                                      {getBlockRangeText(item) && (
+                                                                           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
+                                                                                {getBlockRangeText(item)}
+                                                                           </p>
+                                                                      )}
+                                                                 </div>
+                                                            </div>
+                                                       ))
+                                                  )}
+                                             </div>
+                                        ) : (
+                                             <div className="space-y-2">
+                                                  {Object.entries(rarities).map(([rarity, items]) =>
+                                                       items.map((item, index) => (
+                                                            <div
+                                                                 key={`${biome}-${rarity}-${index}`}
+                                                                 onClick={() => hasModalData(item) ? setSelectedItem(item) : null}
+                                                                 className={`flex items-center gap-4 p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 relative group ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''
+                                                                      }`}
+                                                            >
+                                                                 <div className="bg-zinc-100 dark:bg-zinc-900 p-4 rounded-lg">
+                                                                      <Image
+                                                                           src={getItemImage(item)}
+                                                                           alt={item.name || item.type}
+                                                                           width={48}
+                                                                           height={48}
+                                                                           className="w-12 h-12 object-contain"
+                                                                      />
+                                                                 </div>
+                                                                 <div>
+                                                                      <p className="font-medium text-zinc-900 dark:text-white">
+                                                                           {item.name || item.type.replace(/_/g, ' ')}
+                                                                      </p>
+                                                                      <div className="flex gap-2 mt-1">
+                                                                           <span className={`text-xs capitalize ${rarity === 'common' ? 'text-zinc-500 dark:text-zinc-400' :
+                                                                                rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                                                     rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                                                          'text-yellow-500 dark:text-yellow-400'
+                                                                                }`}>
+                                                                                {rarity}
+                                                                           </span>
+                                                                           {getBlockRangeText(item) && (
+                                                                                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                                                     {getBlockRangeText(item)}
+                                                                                </span>
+                                                                           )}
+                                                                           {item.chances?.[0] !== undefined && (
+                                                                                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                                                                                     {(Number(item.chances[0]) * 100).toFixed(2)}%
+                                                                                </span>
+                                                                           )}
+                                                                      </div>
+                                                                 </div>
+                                                            </div>
+                                                       ))
+                                                  )}
+                                             </div>
+                                        )}
                                    </div>
                               );
-                         })}
-                    </div>
+                         } else {
+                              return null;
+                         }
+                    })}
                </div>
           </main>
      );
