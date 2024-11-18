@@ -44,7 +44,7 @@ export default function LootPage() {
           legendary: initialChances.legendary
      });
      const [customItemsOnly, setCustomItemsOnly] = useState(false);
-     const [listView, setListView] = useState(false);
+     const [viewMode, setViewMode] = useState<'standard' | 'grid' | 'list'>('standard');
      const [collapsedRarities, setCollapsedRarities] = useState<Record<string, Record<string, boolean>>>({});
 
      // Debounce values
@@ -307,16 +307,21 @@ export default function LootPage() {
 
                                         {/* View Toggle */}
                                         <div className="mt-4">
-                                             <label className="flex items-center justify-between p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
-                                                  <span className="text-sm font-medium text-zinc-900 dark:text-white">List View</span>
-                                                  <button
-                                                       onClick={() => setListView(!listView)}
-                                                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${listView ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
-                                                  >
-                                                       <span
-                                                            className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 transition-transform ${listView ? 'translate-x-6' : 'translate-x-1'}`} />
-                                                  </button>
-                                             </label>
+                                             <h4 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">View Mode</h4>
+                                             <div className="flex gap-2">
+                                                  {['standard', 'grid', 'list'].map((mode) => (
+                                                       <button
+                                                            key={mode}
+                                                            onClick={() => setViewMode(mode as 'standard' | 'grid' | 'list')}
+                                                            className={`px-3 py-1 rounded-full text-sm capitalize ${viewMode === mode
+                                                                 ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                                                                 : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
+                                                                 } hover:opacity-80 transition-colors`}
+                                                       >
+                                                            {mode}
+                                                       </button>
+                                                  ))}
+                                             </div>
                                         </div>
                                    </div>
                               )}
@@ -364,13 +369,13 @@ export default function LootPage() {
                                    getItemImage={getItemImage} />
                          )}
 
-                         {/* Loot Grid/List */}
+                         {/* Loot Display */}
                          {Object.entries(filteredData).map(([biome, rarities]) => {
                               if (Object.values(rarities).some(items => items.length > 0)) {
                                    const biomeAdvancement = firstObtainAdvancements[biome as keyof typeof firstObtainAdvancements];
                                    return (
-                                        <div key={biome} className="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-6">
-                                             <div className="flex items-center gap-2 mb-4">
+                                        <div key={biome} className="bg-zinc-50 dark:bg-zinc-800/50 rounded-xl p-6 mb-8">
+                                             <div className="flex items-center gap-2 mb-6">
                                                   <h2 className="text-2xl font-bold text-zinc-900 dark:text-white capitalize">
                                                        {biome.replace(/_treasure$/, '').replace(/_/g, ' ')}
                                                   </h2>
@@ -394,7 +399,63 @@ export default function LootPage() {
                                                        </div>
                                                   )}
                                              </div>
-                                             {!listView ? (
+
+                                             {viewMode === 'standard' ? (
+                                                  <div className="flex gap-4">
+                                                       {RARITIES.map(rarity => {
+                                                            const items = rarities[rarity] || [];
+                                                            if (items.length === 0) return null;
+
+                                                            return (
+                                                                 <div key={rarity} className="flex-1">
+                                                                      <h3 className={`text-lg font-semibold capitalize mb-4 ${
+                                                                           rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
+                                                                           rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                                           rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                                           'text-yellow-500 dark:text-yellow-400'
+                                                                      }`}>
+                                                                           {rarity} ({items.length})
+                                                                      </h3>
+                                                                      <div className="space-y-2">
+                                                                           {items.map((item, index) => (
+                                                                                <div
+                                                                                     key={index}
+                                                                                     onClick={() => hasModalData(item) ? setSelectedItem(item) : null}
+                                                                                     className={`flex items-center gap-3 p-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 ${
+                                                                                          hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''
+                                                                                     }`}
+                                                                                >
+                                                                                     <div className="bg-zinc-100 dark:bg-zinc-900 p-1.5 rounded-md">
+                                                                                          <Image
+                                                                                               src={getItemImage(item)}
+                                                                                               alt={item.name || item.type}
+                                                                                               width={24}
+                                                                                               height={24}
+                                                                                               className="pixelated"
+                                                                                          />
+                                                                                     </div>
+                                                                                     <div className="min-w-0 flex-1">
+                                                                                          <p className="text-sm font-medium text-zinc-900 dark:text-white truncate">
+                                                                                               {item.name || item.type.replace(/_/g, ' ')}
+                                                                                          </p>
+                                                                                          {getBlockRangeText(item) && (
+                                                                                               <p className="text-xs text-zinc-500 dark:text-zinc-400 truncate">
+                                                                                                    {getBlockRangeText(item)}
+                                                                                               </p>
+                                                                                          )}
+                                                                                     </div>
+                                                                                     {(item.chances && Object.keys(item.chances[0]).length > 1 || hasModalData(item)) && (
+                                                                                          <Info className='w-4 h-4 text-zinc-400 flex-shrink-0' />
+                                                                                     )}
+                                                                                </div>
+                                                                           ))}
+                                                                      </div>
+                                                                 </div>
+                                                            );
+                                                       })}
+                                                  </div>
+                                             ) : viewMode === 'grid' ? (
+                                                  // Existing grid view code
                                                   <div className="space-y-6">
                                                        {Object.entries(rarities).map(([rarity, items]) => items.length > 0 && (
                                                             <div key={`${biome}-${rarity}`} className="space-y-4">
@@ -426,28 +487,40 @@ export default function LootPage() {
                                                                                 <div
                                                                                      key={`${biome}-${rarity}-${index}`}
                                                                                      onClick={() => hasModalData(item) ? setSelectedItem(item) : null}
-                                                                                     className={`flex flex-col items-center p-2 rounded-lg border border-zinc-200 dark:border-zinc-700
-                                                                               } bg-white dark:bg-zinc-800 ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''} relative group`}
+                                                                                     className={`group/item flex flex-col items-center p-2 rounded-lg border border-zinc-200 dark:border-zinc-700
+                                                                               } bg-white dark:bg-zinc-800 ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-600' : ''} relative transition-all duration-150`}
                                                                                 >
-                                                                                     <div className="bg-zinc-100 dark:bg-zinc-900 p-2 rounded-lg mb-1">
+                                                                                     <div className="bg-zinc-100 dark:bg-zinc-900 p-2 rounded-lg mb-1 transition-transform duration-150 group-hover/item:scale-105">
                                                                                           <Image
                                                                                                src={getItemImage(item)}
                                                                                                alt={item.name || item.type}
-                                                                                               width={32}
-                                                                                               height={32}
+                                                                                               width={36}
+                                                                                               height={36}
                                                                                                className="pixelated" />
                                                                                      </div>
-                                                                                     <span className="text-xs text-center text-zinc-900 dark:text-white font-medium line-clamp-1 w-full px-1">
-                                                                                          {item.name || item.type.replace(/_/g, ' ')}
-                                                                                     </span>
-                                                                                     {/* Show block range if available
-                                                                                     {getBlockRangeText(item) && (
-                                                                                          <span className="text-[10px] text-zinc-500 dark:text-zinc-400 line-clamp-1 w-full px-1">
-                                                                                               {getBlockRangeText(item)}
+                                                                                     <div className="relative w-full group/tooltip">
+                                                                                          <span className="text-xs text-center text-zinc-900 dark:text-white font-medium line-clamp-1 w-full px-1">
+                                                                                               {item.name || item.type.replace(/_/g, ' ')}
                                                                                           </span>
-                                                                                     )} */}
+                                                                                          <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 w-max max-w-[200px] p-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-lg text-xs opacity-0 invisible group-hover/tooltip:opacity-100 group-hover/tooltip:visible transition-all duration-150 z-10">
+                                                                                               <p className="font-medium">{item.name || item.type.replace(/_/g, ' ')}</p>
+                                                                                               {getBlockRangeText(item) && (
+                                                                                                    <p className="text-zinc-300 mt-1">{getBlockRangeText(item)}</p>
+                                                                                               )}
+                                                                                          </div>
+                                                                                     </div>
                                                                                      {(item.chances && Object.keys(item.chances[0]).length > 1 || hasModalData(item)) && (
-                                                                                          <Info className='absolute top-1 right-1 w-3 h-3 text-zinc-400' />
+                                                                                          <div className="group/info absolute top-1.5 right-1.5">
+                                                                                               <Info className='w-3.5 h-3.5 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors duration-150' />
+                                                                                               <div className="absolute right-0 top-full mt-1 w-48 p-2 bg-zinc-800 dark:bg-zinc-700 text-white rounded-lg text-xs opacity-0 invisible group-hover/info:opacity-100 group-hover/info:visible transition-all duration-150 z-20">
+                                                                                                    {item.chances && Object.keys(item.chances[0]).length > 1 && (
+                                                                                                         <p className="text-zinc-200">Available in multiple tiers</p>
+                                                                                                    )}
+                                                                                                    {hasModalData(item) && (
+                                                                                                         <p className="text-zinc-200 mt-1">Click to view details</p>
+                                                                                                    )}
+                                                                                               </div>
+                                                                                          </div>
                                                                                      )}
                                                                                 </div>
                                                                            ))}
@@ -457,6 +530,7 @@ export default function LootPage() {
                                                        ))}
                                                   </div>
                                              ) : (
+                                                  // Existing list view code
                                                   <div className="space-y-2">
                                                        {Object.entries(rarities).map(([rarity, items]) => items.map((item, index) => (
                                                             <div
