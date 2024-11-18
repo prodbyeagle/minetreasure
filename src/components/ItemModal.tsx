@@ -11,7 +11,6 @@ interface ItemModalProps {
 }
 
 export default function ItemModal({ item, onClose, getItemImage }: ItemModalProps) {
-     // Get the rarity based on conditions
      const getBlockRange = () => {
           if (!item.conditions.stoneMined) return null;
           const min = item.conditions.stoneMined.min || 0;
