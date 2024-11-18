@@ -32,17 +32,19 @@ export default function LootPage() {
      const [searchQuery, setSearchQuery] = useState('');
      const [selectedRarities, setSelectedRarities] = useState<string[]>([]);
      const [selectedBiomes, setSelectedBiomes] = useState<string[]>([]);
-     const [blockRange, setBlockRange] = useState<[number, number]>([0, 100000]);
-     const [visualBlockRange, setVisualBlockRange] = useState<[number, number]>([0, 100000]);
+     const [blockRange, setBlockRange] = useState<[number, number]>([0, 500000]);
+     const [visualBlockRange, setVisualBlockRange] = useState<[number, number]>([0, 500000]);
+     const [displayBlockCount, setDisplayBlockCount] = useState(500000);
      const [showFilters, setShowFilters] = useState(false);
      const [selectedItem, setSelectedItem] = useState<MT_ITEM | null>(null);
-     const [chanceRanges, setChanceRanges] = useState({
+     const [chanceRanges] = useState({
           common: initialChances.common,
           rare: initialChances.rare,
           epic: initialChances.epic,
           legendary: initialChances.legendary
      });
      const [customItemsOnly, setCustomItemsOnly] = useState(false);
+     const [viewAllItems, setViewAllItems] = useState(false);
      const [viewMode, setViewMode] = useState<'standard' | 'grid' | 'list'>('standard');
      const [collapsedRarities, setCollapsedRarities] = useState<Record<string, Record<string, boolean>>>({});
      const debouncedSearch = useDebounce(searchQuery, 300);
@@ -50,18 +52,21 @@ export default function LootPage() {
      const debouncedChanceRanges = useDebounce(chanceRanges, 300);
 
      const handleBlockRangeChange = (value: number) => {
-          const newRange: [number, number] = [0, value];
-          setVisualBlockRange(newRange);
-          setBlockRange(newRange);
+          if (!viewAllItems) {
+               setVisualBlockRange([0, value]);
+          }
      };
 
-     const handleChanceRangeChange = (rarity: string, value: string) => {
-          const numValue = parseInt(value) || 0;
-          setChanceRanges(prev => ({
-               ...prev,
-               [rarity]: numValue
-          }));
-     };
+     useEffect(() => {
+          const timer = setTimeout(() => {
+               if (!viewAllItems) {
+                    setBlockRange(visualBlockRange);
+                    setDisplayBlockCount(visualBlockRange[1]);
+               }
+          }, 500);
+          return () => clearTimeout(timer);
+     }, [visualBlockRange, viewAllItems]);
+
 
      const RARITIES = ['common', 'rare', 'epic', 'legendary'];
      const BIOMES = useMemo(() =>
@@ -194,7 +199,7 @@ export default function LootPage() {
                                         <Filter className="h-4 w-4" />
                                         <span className="text-sm">Filters</span>
                                    </button>
-                                   <div className="flex p-1 items-center rounded-lg border border-zinc-200 dark:border-zinc-700 divide-x divide-zinc-200 dark:divide-zinc-700">
+                                   <div className="flex p-1 items-center rounded-lg border border-zinc-200 dark:border-zinc-700">
                                         <button
                                              onClick={() => setViewMode('standard')}
                                              className={`p-2 rounded-lg transition-colors ${viewMode === 'standard'
@@ -277,27 +282,28 @@ export default function LootPage() {
                                              </div>
                                         </div>
 
-                                        <div className="p-4 mt-8 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
-                                             <div>
-                                                  <h4 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Blocks Mined</h4>
-                                                  <div className="px-2">
-                                                       <input
-                                                            type="range"
-                                                            min="0"
-                                                            max="500000"
-                                                            value={visualBlockRange[1]}
-                                                            onChange={(e) => handleBlockRangeChange(parseInt(e.target.value))}
-                                                            className="w-full h-2 bg-zinc-200 dark:bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-zinc-500 dark:accent-zinc-400" />
-                                                       <div className="flex justify-between mt-2">
-                                                            <span className="text-xs text-zinc-500 dark:text-zinc-400">0</span>
-                                                            <span className="text-xs text-zinc-500 dark:text-zinc-400">{visualBlockRange[1].toLocaleString()}</span>
-                                                       </div>
+                                        {/* Blocks Mined Slider */}
+                                        {!viewAllItems && (
+                                             <div className="space-y-2 mt-8">
+                                                  <div className="flex items-center justify-between">
+                                                       <label className="text-sm font-medium text-zinc-900 dark:text-white">
+                                                            Blocks Mined
+                                                       </label>
+                                                       <span className="text-xs text-zinc-500 dark:text-zinc-400">{displayBlockCount.toLocaleString()}</span>
                                                   </div>
+                                                  <input
+                                                       type="range"
+                                                       min="0"
+                                                       max="500000"
+                                                       value={visualBlockRange[1]}
+                                                       onChange={(e) => handleBlockRangeChange(parseInt(e.target.value))}
+                                                       className="w-full"
+                                                  />
                                              </div>
-                                        </div>
+                                        )}
 
-                                        {/* Chance Filters */}
-                                        <div className="mt-8">
+                                        {/* Chance Filters
+                                        <div className="mt-2">
                                              <h4 className="text-sm font-medium text-zinc-900 dark:text-white mb-3">Chance Filters</h4>
                                              <div className="grid grid-cols-4 gap-4">
                                                   {RARITIES.map(rarity => (
@@ -314,10 +320,10 @@ export default function LootPage() {
                                                        </div>
                                                   ))}
                                              </div>
-                                        </div>
+                                        </div> */}
 
                                         {/* Custom Items Toggle */}
-                                        <div className="mt-4">
+                                        <div className="mt-4 space-y-4">
                                              <label className="flex items-center justify-between cursor-pointer">
                                                   <span className="text-sm font-medium text-zinc-900 dark:text-white">Custom Items Only</span>
                                                   <button
@@ -326,6 +332,24 @@ export default function LootPage() {
                                                   >
                                                        <span
                                                             className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 transition-transform ${customItemsOnly ? 'translate-x-6' : 'translate-x-1'}`} />
+                                                  </button>
+                                             </label>
+
+                                             <label className="flex items-center justify-between cursor-pointer">
+                                                  <span className="text-sm font-medium text-zinc-900 dark:text-white">View All Items</span>
+                                                  <button
+                                                       onClick={() => {
+                                                            const newValue = !viewAllItems;
+                                                            setViewAllItems(newValue);
+                                                            if (newValue) {
+                                                                 setBlockRange([0, 500000]);
+                                                                 setVisualBlockRange([0, 500000]);
+                                                            }
+                                                       }}
+                                                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${viewAllItems ? 'bg-zinc-900 dark:bg-white' : 'bg-zinc-200 dark:bg-zinc-700'}`}
+                                                  >
+                                                       <span
+                                                            className={`inline-block h-4 w-4 transform rounded-full bg-white dark:bg-zinc-900 transition-transform ${viewAllItems ? 'translate-x-6' : 'translate-x-1'}`} />
                                                   </button>
                                              </label>
                                         </div>
@@ -417,8 +441,7 @@ export default function LootPage() {
                                                                       <h3 className={`text-lg font-semibold capitalize mb-4 ${rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
                                                                            rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
                                                                                 rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
-                                                                                     'text-yellow-500 dark:text-yellow-400'
-                                                                           }`}>
+                                                                                     'text-yellow-500 dark:text-yellow-400'}`}>
                                                                            {rarity} ({items.length})
                                                                       </h3>
                                                                       <div className="space-y-2">
