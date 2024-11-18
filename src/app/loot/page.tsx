@@ -411,8 +411,12 @@ export default function LootPage() {
                                                             <div
                                                                  key={`${biome}-${rarity}-${index}`}
                                                                  onClick={() => hasModalData(item) ? setSelectedItem(item) : null}
-                                                                 className={`flex flex-col items-center p-4 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''
-                                                                      } relative group`}
+                                                                 className={`flex flex-col items-center p-4 rounded-lg border ${
+                                                                      rarity === 'common' ? 'border-zinc-200 dark:border-zinc-700' :
+                                                                      rarity === 'rare' ? 'border-blue-500 dark:border-blue-400' :
+                                                                      rarity === 'epic' ? 'border-purple-500 dark:border-purple-400' :
+                                                                      'border-yellow-500 dark:border-yellow-400'
+                                                                 } bg-white dark:bg-zinc-800 ${hasModalData(item) ? 'hover:bg-zinc-50 dark:hover:bg-zinc-700/50 cursor-pointer' : ''} relative group`}
                                                             >
                                                                  <div className="bg-zinc-100 dark:bg-zinc-900 p-4 rounded-lg mb-3">
                                                                       <Image
@@ -430,11 +434,7 @@ export default function LootPage() {
                                                                       <p className="text-xs font-medium text-zinc-900 dark:text-white truncate">
                                                                            {item.name || item.type.replace(/_/g, ' ')}
                                                                       </p>
-                                                                      <p className={`text-xs capitalize ${rarity === 'common' ? 'text-zinc-500 dark:text-zinc-400' :
-                                                                           rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
-                                                                                rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
-                                                                                     'text-yellow-500 dark:text-yellow-400'
-                                                                           }`}>
+                                                                      <p className="text-xs capitalize text-zinc-600 dark:text-zinc-400">
                                                                            {rarity}
                                                                       </p>
                                                                       {getBlockRangeText(item) && (
@@ -471,11 +471,7 @@ export default function LootPage() {
                                                                            {item.name || item.type.replace(/_/g, ' ')}
                                                                       </p>
                                                                       <div className="flex gap-2 mt-1">
-                                                                           <span className={`text-xs capitalize ${rarity === 'common' ? 'text-zinc-500 dark:text-zinc-400' :
-                                                                                rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
-                                                                                     rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
-                                                                                          'text-yellow-500 dark:text-yellow-400'
-                                                                                }`}>
+                                                                           <span className="text-xs capitalize text-zinc-600 dark:text-zinc-400">
                                                                                 {rarity}
                                                                            </span>
                                                                            {getBlockRangeText(item) && (

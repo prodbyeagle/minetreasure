@@ -42,7 +42,7 @@ export default function Home() {
                 </div>
                 <Link 
                   href="/download" 
-                  className="inline-flex items-center px-6 py-3 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
+                  className="inline-flex items-center px-6 py-3 rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
                 >
                   Start playing
                   <ArrowRight className="ml-2 h-4 w-4" />
