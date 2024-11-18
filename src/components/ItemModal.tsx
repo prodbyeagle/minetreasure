@@ -3,7 +3,6 @@
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import type { MT_ITEM } from '@/types/types';
-import { calculateRarity, getRarityColor } from '@/utils/item';
 
 interface ItemModalProps {
      item: MT_ITEM;
@@ -21,7 +20,6 @@ export default function ItemModal({ item, onClose, getItemImage }: ItemModalProp
      };
 
      const blockRange = getBlockRange();
-     const rarity = calculateRarity(item);
 
      return (
           <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={onClose}>
@@ -45,11 +43,6 @@ export default function ItemModal({ item, onClose, getItemImage }: ItemModalProp
                                         {blockRange && (
                                              <span className="inline-flex items-center rounded-md bg-zinc-100 dark:bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-700 dark:text-zinc-300">
                                                   {blockRange.min.toLocaleString()} - {blockRange.max?.toLocaleString()} blocks
-                                             </span>
-                                        )}
-                                        {rarity && (
-                                             <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getRarityColor(rarity)}`}>
-                                                  {rarity}
                                              </span>
                                         )}
                                         {item.name && (
