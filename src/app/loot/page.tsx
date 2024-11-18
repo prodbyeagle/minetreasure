@@ -51,7 +51,6 @@ export default function LootPage() {
      const debouncedBlockRange = useDebounce(blockRange, 300);
      const debouncedChanceRanges = useDebounce(chanceRanges, 300);
 
-     // Update visual range immediately but debounce actual filter
      const handleBlockRangeChange = (value: number) => {
           const newRange: [number, number] = [0, value];
           setVisualBlockRange(newRange);
