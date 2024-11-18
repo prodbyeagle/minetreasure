@@ -16,7 +16,7 @@ export default function Navbar() {
             href="/" 
             className="font-semibold text-lg hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors"
           >
-            MineTreasure
+            Mine Treasure
           </Link>
 
           {/* Navigation Links */}

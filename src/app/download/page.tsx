@@ -13,34 +13,15 @@ export default function DownloadPage() {
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                          {/* Header Section */}
                          <div className="text-center mb-16">
-                              <h1 className="text-4xl font-bold mb-4">Download MineTreasure</h1>
+                              <h1 className="text-4xl font-bold mb-4">Download Mine Treasure</h1>
                               <p className="text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-                                   Choose your preferred platform to download MineTreasure. Make sure to read the installation
+                                   Choose your preferred platform to download Mine Treasure. Make sure to read the installation
                                    instructions for your specific platform.
                               </p>
                          </div>
 
                          {/* Download Options */}
-                         <div className="grid md:grid-cols-2 gap-8 mb-16">
-                              {/* Planet Minecraft */}
-                              <div className="bg-zinc-50 dark:bg-zinc-800/50 p-8 rounded-xl">
-                                   <h2 className="text-2xl font-semibold mb-4">Planet Minecraft</h2>
-                                   <p className="text-zinc-600 dark:text-zinc-400 mb-6">
-                                        Download from Planet Minecraft, the most popular Minecraft community platform.
-                                        Includes ratings, comments, and community feedback.
-                                   </p>
-                                   <Link
-                                        href="https://www.planetminecraft.com/data-pack/mine-treasure/"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center px-6 py-3 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 hover:bg-zinc-700 dark:hover:bg-zinc-100 transition-colors"
-                                   >
-                                        <Download className="mr-2 h-5 w-5" />
-                                        Download from PMC
-                                        <ExternalLink className="ml-2 h-4 w-4" />
-                                   </Link>
-                              </div>
-
+                         <div className="mb-8">
                               {/* Modrinth */}
                               <div className="bg-zinc-50 dark:bg-zinc-800/50 p-8 rounded-xl">
                                    <h2 className="text-2xl font-semibold mb-4">Modrinth</h2>
