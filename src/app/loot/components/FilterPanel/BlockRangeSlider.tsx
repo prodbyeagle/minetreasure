@@ -6,7 +6,7 @@ interface BlockRangeSliderProps {
 
 export default function BlockRangeSlider({ value, onChange, displayBlockCount }: BlockRangeSliderProps) {
     return (
-        <div className="space-y-2">
+        <div className="space-y-2 mt-4">
             <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-zinc-900 dark:text-white">
                     Blocks Mined
