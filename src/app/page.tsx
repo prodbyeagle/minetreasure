@@ -2,10 +2,10 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
-import Review from '../components/Review';
-import StatisticsChart from '../components/StatisticsChart';
+import Review from '@/components/Review';
+import StatisticsChart from '@/components/StatisticsChart';
 import { ArrowRight, AlertCircle, CheckCircle2, HelpCircle } from 'lucide-react';
-import Navbar from '../components/Navbar';
+import Navbar from '@/components/Navbar';
 
 export default function Home() {
   const whySectionRef = useRef<HTMLDivElement>(null);
