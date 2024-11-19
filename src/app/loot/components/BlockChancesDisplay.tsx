@@ -5,7 +5,7 @@ import { useBlockChances } from '@/hooks/useBlockChances';
 import RarityInputs from './FilterPanel/RarityInputs';
 
 const rarityColors = {
-    "common": "#52525b",
+    "common": "#a1a1aa",
     "rare": "#3b82f6",
     "epic": "#a855f7",
     "legendary": "#eab308"
@@ -30,8 +30,8 @@ export default function BlockChancesDisplay() {
         <div className="space-y-4">
             <RarityInputs values={rarityValues} onChange={setRarityValues} />
 
-            <div className="max-h-[500px] overflow-y-auto">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 bg-white dark:bg-zinc-800 rounded-lg shadow-sm">
+            <div className="max-h-[500px] overflow-y-auto rounded-lg bg-white dark:bg-zinc-800 shadow-sm">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4">
                     {blockChances.map(({ blockName, chances }: BlockChance) => (
                         <div key={blockName} className="p-4 border border-zinc-200 dark:border-zinc-700 rounded-lg">
                             <div className="flex items-center gap-2 mb-4">
