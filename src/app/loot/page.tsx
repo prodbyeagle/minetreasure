@@ -160,7 +160,7 @@ export default function LootPage() {
           if (!item.conditions.stoneMined) return null;
           const min = item.conditions.stoneMined.min || 0;
           const max = item.conditions.stoneMined.max;
-          return `${min.toLocaleString()} - ${max?.toLocaleString()} blocks`;
+          return max ? `${min.toLocaleString()} - ${max.toLocaleString()} blocks` : `${min.toLocaleString()}+ blocks`;
      };
 
      return (

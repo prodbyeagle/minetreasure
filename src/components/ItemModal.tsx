@@ -41,7 +41,7 @@ export default function ItemModal({ item, onClose, getItemImage }: ItemModalProp
                                    <div className="mt-1 flex items-center gap-2">
                                         {blockRange && (
                                              <span className="inline-flex items-center rounded-md bg-zinc-100 dark:bg-zinc-800 px-2 py-1 text-xs font-medium text-zinc-700 dark:text-zinc-300">
-                                                  {blockRange.min.toLocaleString()} - {blockRange.max?.toLocaleString()} blocks
+                                                  {blockRange.max ? `${blockRange.min.toLocaleString()} - ${blockRange.max.toLocaleString()} blocks` : `${blockRange.min.toLocaleString()}+ blocks`}
                                              </span>
                                         )}
                                         {item.name && (
