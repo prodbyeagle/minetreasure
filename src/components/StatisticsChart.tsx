@@ -11,7 +11,6 @@ interface StatData {
     id: number;
 }
 
-// Custom Tooltip Component
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
         return (

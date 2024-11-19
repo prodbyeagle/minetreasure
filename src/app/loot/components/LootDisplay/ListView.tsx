@@ -39,10 +39,9 @@ export default function ListView({
         router.push(`#${biome}`);
     };
 
-    // Handle hash navigation on load and hash changes
     useEffect(() => {
         const handleHash = () => {
-            const hash = window.location.hash.slice(1); // Remove the # symbol
+            const hash = window.location.hash.slice(1);
             if (hash) {
                 const element = document.getElementById(hash);
                 if (element) {
@@ -51,7 +50,7 @@ export default function ListView({
             }
         };
 
-        handleHash(); // Handle initial hash
+        handleHash();
         window.addEventListener('hashchange', handleHash);
         return () => window.removeEventListener('hashchange', handleHash);
     }, []);

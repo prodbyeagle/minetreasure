@@ -8,15 +8,11 @@ import ItemModal from '@/components/ItemModal';
 import { Filter } from 'lucide-react';
 import treasureData from '@/data/data.json';
 import type { MT_ITEM } from '@/types/types';
-
-// Components
 import LootHeader from './components/LootHeader';
 import SearchBar from './components/SearchBar';
 import ViewModeSelector from './components/ViewModeSelector';
 import LootDisplay from './components/LootDisplay';
 import FilterPanel from './components/FilterPanel';
-
-// Utils
 import { useDebounce } from '../../hooks/useDebounce';
 import { getItemImage } from './utils/itemUtils';
 import { filterItems } from './utils/filterUtils';
