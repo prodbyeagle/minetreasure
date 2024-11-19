@@ -1,4 +1,5 @@
 import "./globals.css";
+import Footer from "@/components/Footer";
 
 export default function RootLayout({
   children,
@@ -11,6 +12,8 @@ export default function RootLayout({
         className={`antialiased`}
       >
         {children}
+
+        <Footer/>
       </body>
     </html>
   );
