@@ -99,7 +99,13 @@ export default function GridView({
                                                 onClick={() => onToggleCollapse(biome, rarity)}
                                             >
                                                 {isRarityCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                                                <h3 className="text-lg font-semibold capitalize">{rarity}</h3>
+                                                <h3 className={`text-lg font-semibold capitalize ${rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
+                                                    rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                        rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                            'text-yellow-500 dark:text-yellow-400'
+                                                    }`}>
+                                                    {rarity} ({items.length})
+                                                </h3>
                                             </div>
 
                                             {!isRarityCollapsed && (

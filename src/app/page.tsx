@@ -68,9 +68,10 @@ export default function Home() {
               <div className="bg-white dark:bg-zinc-800 p-8 rounded-xl">
                 <div className="relative h-48 mb-6 overflow-hidden rounded-lg">
                   <Image
-                    src="/images/treeasure-tiers.gif"
+                    src="/images/treasure-tiers.gif"
                     alt="Different treasure tiers"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                 </div>
@@ -88,6 +89,7 @@ export default function Home() {
                     src="/images/biomes.jpg"
                     alt="Biome specific treasures"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                 </div>
@@ -104,6 +106,7 @@ export default function Home() {
                     src="/images/items.png"
                     alt="Custom items showcase"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                 </div>
@@ -121,6 +124,7 @@ export default function Home() {
                     src="/images/advancements.png"
                     alt="Custom advancements system"
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover"
                   />
                 </div>

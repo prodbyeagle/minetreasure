@@ -137,6 +137,16 @@ export default function LootPage() {
                               displayBlockCount={displayBlockCount}
                               onClearFilters={handleClearFilters}
                               viewAllItems={viewAllItems}
+                              customItemsOnly={customItemsOnly}
+                              onToggleCustomItems={() => setCustomItemsOnly(!customItemsOnly)}
+                              onToggleViewAllItems={() => {
+                                   const newValue = !viewAllItems;
+                                   setViewAllItems(newValue);
+                                   if (newValue) {
+                                        setBlockRange(500000);
+                                        setDisplayBlockCount(500000);
+                                   }
+                              }}
                          />
                     )}
 
