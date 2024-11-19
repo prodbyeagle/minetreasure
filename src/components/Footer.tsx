@@ -17,34 +17,6 @@ const Footer = () => {
                         <p className="text-sm text-zinc-600 dark:text-zinc-400">
                             Discover hidden treasures across Minecraft&apos;s vast biomes.
                         </p>
-                        <div className="flex space-x-4">
-                            <Link
-                                href="https://ko-fi.com/frozytime"
-                                target="_blank"
-                                className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-                            >
-                                <Image
-                                    src="/images/kofi.webp"
-                                    alt="Ko-fi"
-                                    height={24}
-                                    width={24}
-                                    className="rounded"
-                                />
-                            </Link>
-                            <Link
-                                href="https://ko-fi.com/supercrafter100"
-                                target="_blank"
-                                className="text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
-                            >
-                                <Image
-                                    src="/images/kofi.webp"
-                                    alt="Ko-fi"
-                                    height={24}
-                                    width={24}
-                                    className="rounded"
-                                />
-                            </Link>
-                        </div>
                     </div>
 
                     <div>
@@ -68,7 +40,7 @@ const Footer = () => {
                             </li>
                             <li>
                                 <a
-                                    href="https://github.com/Mine-Treasure/Mine-Treasure-Website"
+                                    href="https://github.com/prodbyeagle/minetreasure"
                                     className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                                 >
                                     Website Source
@@ -84,18 +56,32 @@ const Footer = () => {
                                 <Link
                                     href="https://ko-fi.com/frozytime"
                                     target="_blank"
-                                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                                    className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                                 >
                                     Support Datapack Author
+                                    <Image
+                                        src="/images/kofi.webp"
+                                        alt="Ko-fi"
+                                        height={30}
+                                        width={30}
+                                        className="rounded"
+                                    />
                                 </Link>
                             </li>
                             <li>
                                 <Link
                                     href="https://ko-fi.com/supercrafter100"
                                     target="_blank"
-                                    className="text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
+                                    className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors"
                                 >
                                     Support Website Author
+                                    <Image
+                                        src="/images/kofi.webp"
+                                        alt="Ko-fi"
+                                        height={30}
+                                        width={30}
+                                        className="rounded"
+                                    />
                                 </Link>
                             </li>
                         </ul>
