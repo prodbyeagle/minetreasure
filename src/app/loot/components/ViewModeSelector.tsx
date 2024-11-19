@@ -47,11 +47,10 @@ function ViewButton({ mode, currentMode, onClick, icon, title }: ViewButtonProps
     return (
         <button
             onClick={onClick}
-            className={`p-2 rounded-lg transition-colors ${
-                mode === currentMode
+            className={`p-2 rounded-lg transition-colors ${mode === currentMode
                     ? 'text-zinc-900 dark:text-white bg-zinc-100 dark:bg-zinc-700'
                     : 'text-zinc-400 dark:text-zinc-400 hover:text-zinc-600 dark:hover:text-white hover:bg-zinc-800'
-            }`}
+                }`}
             title={title}
         >
             {icon}

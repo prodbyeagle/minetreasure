@@ -61,9 +61,9 @@ export default function StandardView({
                         <div className="flex items-center gap-2 bg-zinc-800 p-4 rounded-xl">
                             <BiomeIcon />
                             <h2 className="text-xl font-bold">{formattedBiomeName}</h2>
-                            <button 
+                            <button
                                 onClick={(e) => handleHashClick(biome, e)}
-                                className="text-gray-400 hover:text-gray-200 focus:text-gray-200 ml-2"
+                                className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white focus:text-white ml-2 rounded-lg hover:bg-zinc-700 transition-all duration-200 transform hover:scale-110"
                                 title="Copy link to section"
                             >
                                 #
@@ -76,12 +76,11 @@ export default function StandardView({
 
                                 return (
                                     <div key={rarity} className="space-y-2">
-                                        <h3 className={`text-lg font-semibold capitalize ${
-                                            rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
-                                            rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
-                                            rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
-                                            'text-yellow-500 dark:text-yellow-400'
-                                        }`}>
+                                        <h3 className={`text-lg font-semibold capitalize ${rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
+                                                rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                    rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                        'text-yellow-500 dark:text-yellow-400'
+                                            }`}>
                                             {rarity} ({items.length})
                                         </h3>
                                         <div className="space-y-2">

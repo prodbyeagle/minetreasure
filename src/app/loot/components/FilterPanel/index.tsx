@@ -36,11 +36,10 @@ export default function FilterPanel({
         <>
             <button
                 onClick={onToggleFilters}
-                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg ${
-                    showFilters
+                className={`inline-flex items-center gap-2 px-3 py-2 rounded-lg ${showFilters
                         ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
                         : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
-                } hover:opacity-80 transition-colors`}
+                    } hover:opacity-80 transition-colors`}
             >
                 <Filter className="h-4 w-4" />
                 <span className="text-sm">Filters</span>

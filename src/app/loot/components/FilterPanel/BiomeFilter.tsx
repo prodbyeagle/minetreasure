@@ -28,11 +28,10 @@ export default function BiomeFilter({ biomes, selectedBiomes, onToggleBiome }: B
                         <button
                             key={biome}
                             onClick={() => onToggleBiome(biome)}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${
-                                isSelected
-                                    ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
-                                    : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
-                            } hover:opacity-80 transition-colors`}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm ${isSelected
+                                ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
+                                : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
+                                } hover:opacity-80 transition-colors`}
                         >
                             <BiomeIcon />
                             <span>{formattedName}</span>

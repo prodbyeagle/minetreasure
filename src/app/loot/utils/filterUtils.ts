@@ -30,7 +30,7 @@ export function filterItems({
     relevantBiomes.forEach(biome => {
         const biomeData = data[biome as keyof typeof data];
         filtered[biome] = {};
-    
+
         raritiesToShow.forEach(rarity => {
             const rarityData = biomeData[rarity as keyof typeof biomeData];
             if (!rarityData) return;

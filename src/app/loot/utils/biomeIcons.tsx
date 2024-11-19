@@ -32,7 +32,7 @@ export const getBiomeIcon = (biome: string) => {
     };
 
     const iconPath = icons[biome] || '/items/missing_texture_block.png';
-    
+
     // eslint-disable-next-line react/display-name
     return () => (
         <Image

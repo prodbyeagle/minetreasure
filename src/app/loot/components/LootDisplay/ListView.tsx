@@ -68,16 +68,16 @@ export default function ListView({
 
                 return (
                     <div key={biome} id={biome} className="space-y-2">
-                        <div 
+                        <div
                             className="flex items-center gap-2 cursor-pointer bg-zinc-800 p-4 rounded-xl"
                             onClick={() => onToggleBiomeCollapse(biome)}
                         >
                             {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                             <BiomeIcon />
                             <h2 className="text-xl font-bold">{formattedBiomeName}</h2>
-                            <button 
+                            <button
                                 onClick={(e) => handleHashClick(biome, e)}
-                                className="text-gray-400 hover:text-gray-200 focus:text-gray-200 ml-2"
+                                className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white focus:text-white ml-2 rounded-lg hover:bg-zinc-700 transition-all duration-200 transform hover:scale-110"
                                 title="Copy link to section"
                             >
                                 #
@@ -94,17 +94,16 @@ export default function ListView({
 
                                     return (
                                         <div key={rarity} className="space-y-2">
-                                            <div 
+                                            <div
                                                 className="flex items-center gap-2 cursor-pointer hover:bg-zinc-700 duration-100 transition-all p-2 rounded-lg"
                                                 onClick={() => onToggleCollapse(biome, rarity)}
                                             >
                                                 {isRarityCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                                                <h3 className={`text-lg font-semibold capitalize ${
-                                                    rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
-                                                    rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
-                                                    rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
-                                                    'text-yellow-500 dark:text-yellow-400'
-                                                }`}>
+                                                <h3 className={`text-lg font-semibold capitalize ${rarity === 'common' ? 'text-zinc-600 dark:text-zinc-400' :
+                                                        rarity === 'rare' ? 'text-blue-500 dark:text-blue-400' :
+                                                            rarity === 'epic' ? 'text-purple-500 dark:text-purple-400' :
+                                                                'text-yellow-500 dark:text-yellow-400'
+                                                    }`}>
                                                     {rarity} ({items.length})
                                                 </h3>
                                             </div>

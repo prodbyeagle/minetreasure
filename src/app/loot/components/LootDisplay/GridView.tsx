@@ -68,16 +68,16 @@ export default function GridView({
 
                 return (
                     <div key={biome} id={biome} className="space-y-2">
-                        <div 
+                        <div
                             className="flex items-center gap-2 cursor-pointer bg-zinc-800 p-4 rounded-xl"
                             onClick={() => onToggleBiomeCollapse(biome)}
                         >
                             {isCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
                             <BiomeIcon />
                             <h2 className="text-xl font-bold">{formattedBiomeName}</h2>
-                            <button 
+                            <button
                                 onClick={(e) => handleHashClick(biome, e)}
-                                className="text-gray-400 hover:text-gray-200 focus:text-gray-200 ml-2"
+                                className="flex items-center justify-center w-8 h-8 text-gray-400 hover:text-white focus:text-white ml-2 rounded-lg hover:bg-zinc-700 transition-all duration-200 transform hover:scale-110"
                                 title="Copy link to section"
                             >
                                 #
@@ -88,13 +88,14 @@ export default function GridView({
                             <div className="space-y-4">
                                 {RARITIES.map(rarity => {
                                     const items = rarities[rarity] || [];
+
                                     if (items.length === 0) return null;
 
                                     const isRarityCollapsed = collapsedRarities[biome]?.[rarity];
 
                                     return (
                                         <div key={rarity} className="space-y-2">
-                                            <div 
+                                            <div
                                                 className="flex items-center gap-2 cursor-pointer hover:bg-zinc-700 duration-100 transition-all p-2 rounded-lg"
                                                 onClick={() => onToggleCollapse(biome, rarity)}
                                             >

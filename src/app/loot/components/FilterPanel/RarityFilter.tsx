@@ -14,11 +14,10 @@ export default function RarityFilter({ selectedRarities, onToggleRarity }: Rarit
                     <button
                         key={rarity}
                         onClick={() => onToggleRarity(rarity)}
-                        className={`px-3 py-1 rounded-full text-sm capitalize ${
-                            selectedRarities.includes(rarity)
+                        className={`px-3 py-1 rounded-full text-sm capitalize ${selectedRarities.includes(rarity)
                                 ? 'bg-zinc-900 text-white dark:bg-white dark:text-zinc-900'
                                 : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-700 dark:text-zinc-300'
-                        } hover:opacity-80 transition-colors`}
+                            } hover:opacity-80 transition-colors`}
                     >
                         {rarity}
                     </button>
