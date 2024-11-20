@@ -1,15 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 import { useEffect, useState } from 'react';
+import type { StatData } from '@/types/types';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-
-interface StatData {
-    downloads: number;
-    mrdownloads: number;
-    views: number;
-    date: string;
-    id: number;
-}
 
 const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -122,7 +115,7 @@ const StatisticsChart = () => {
                         <Line
                             type="monotone"
                             dataKey="mrdownloads"
-                            name="MR Downloads"
+                            name="Modrinth Downloads"
                             stroke="#16a34a"
                             strokeWidth={2}
                             dot={false}

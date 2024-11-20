@@ -1,19 +1,7 @@
 'use client';
 
-interface RarityInputsProps {
-    values: {
-        common: number;
-        rare: number;
-        epic: number;
-        legendary: number;
-    };
-    onChange: (values: {
-        common: number;
-        rare: number;
-        epic: number;
-        legendary: number;
-    }) => void;
-}
+import type { RarityInputsProps } from "@/types/types";
+
 
 const rarityColors = {
     "common": "text-zinc-600 dark:text-zinc-400",

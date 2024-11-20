@@ -1,4 +1,4 @@
-import type { MT_DATA, MT_ITEM } from '@/types/types';
+import type { StandardViewProps } from '@/types/types';
 import ItemCard from './ItemCard';
 import { RARITIES } from '../../utils/filterUtils';
 import { useRouter } from 'next/navigation';
@@ -11,12 +11,6 @@ const formatBiomeName = (biome: string) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-
-interface StandardViewProps {
-    data: MT_DATA;
-    getItemImage: (item: MT_ITEM) => string;
-    onItemClick: (item: MT_ITEM) => void;
-}
 
 export default function StandardView({
     data,

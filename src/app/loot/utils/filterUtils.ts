@@ -1,16 +1,6 @@
-import type { MT_DATA, MT_ITEM } from '@/types/types';
+import type { MT_DATA, MT_ITEM, FilterItemsParams } from '@/types/types';
 
 export const RARITIES = ['common', 'rare', 'epic', 'legendary'];
-
-interface FilterItemsParams {
-    data: MT_DATA;
-    searchQuery: string;
-    selectedRarities: string[];
-    selectedBiomes: string[];
-    blockRange: number;
-    customItemsOnly: boolean;
-    viewAllItems: boolean;
-}
 
 export function filterItems({
     data,

@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useBlockChances } from '@/hooks/useBlockChances';
 import RarityInputs from './FilterPanel/RarityInputs';
+import type { BlockChance } from '@/types/types';
 
 const rarityColors = {
     "common": "#a1a1aa",
@@ -10,18 +11,6 @@ const rarityColors = {
     "epic": "#a855f7",
     "legendary": "#eab308"
 } as const;
-
-interface Chances {
-    common: number;
-    rare: number;
-    epic: number;
-    legendary: number;
-}
-
-interface BlockChance {
-    blockName: string;
-    chances: Chances;
-}
 
 export default function BlockChancesDisplay() {
     const { blockChances, rarityValues, setRarityValues } = useBlockChances(2);

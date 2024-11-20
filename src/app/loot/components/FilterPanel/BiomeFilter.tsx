@@ -1,4 +1,5 @@
 import { getBiomeIcon } from '../../utils/biomeIcons';
+import type { BiomeFilterProps } from '@/types/types';
 
 const formatBiomeName = (biome: string) => {
     return biome
@@ -7,12 +8,6 @@ const formatBiomeName = (biome: string) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-
-interface BiomeFilterProps {
-    biomes: string[];
-    selectedBiomes: string[];
-    onToggleBiome: (biome: string) => void;
-}
 
 export default function BiomeFilter({ biomes, selectedBiomes, onToggleBiome }: BiomeFilterProps) {
     return (

@@ -1,9 +1,6 @@
 import { RARITIES } from '../../utils/filterUtils';
+import type { RarityFilterProps } from '@/types/types';
 
-interface RarityFilterProps {
-    selectedRarities: string[];
-    onToggleRarity: (rarity: string) => void;
-}
 
 export default function RarityFilter({ selectedRarities, onToggleRarity }: RarityFilterProps) {
     return (

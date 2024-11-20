@@ -27,7 +27,7 @@ export const getBiomeIcon = (biome: string) => {
         warped_treasure: '/items/warped_stem.png',
         wind_treasure: '/items/gravel.png',
         basalt_treasure: '/items/basalt.png',
-        deepdark_treasure: '/items/sculk_shrieker.png',
+        deepdark_treasure: '/items/sculk.png',
         default_treasure: '/items/grass_block.png'
     };
 

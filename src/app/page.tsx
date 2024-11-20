@@ -45,14 +45,14 @@ export default function Home() {
                   <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </div>
-              <div className="hidden lg:block">
+              <div className="hidden lg:flex items-center justify-center">
                 <Image
                   src="/images/treasure.svg"
                   alt="Treasure illustration"
                   width={500}
                   height={500}
                   priority
-                  className="w-full"
+                  className="w-full max-w-[500px] h-auto xl:max-w-[600px] 2xl:max-w-[700px]"
                 />
               </div>
             </div>
@@ -151,6 +151,14 @@ export default function Home() {
               <Review
                 text="I love this pack so much. Mining is one of those grindy things in minecraft I used to hate so much but now it's got such an allure!"
                 username="ThatwitchyPlayr"
+              />
+              <Review
+                text="The biome-specific treasures are amazing! It gives me a reason to explore and build bases in different biomes. Best mining pack ever!"
+                username="prodbyeagle"
+              />
+              <Review
+                text="The custom items and advancements add so much depth to the game. Every mining session feels like a treasure hunt now!"
+                username="Technoblade"
               />
             </div>
           </div>
@@ -256,7 +264,7 @@ export default function Home() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <Link
               href="/download"
-              className="inline-flex items-center px-8 py-4 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-lg"
+              className="inline-flex items-center px-8 py-4 rounded-xl bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors text-lg"
             >
               Start playing
               <ArrowRight className="ml-2 h-5 w-5" />

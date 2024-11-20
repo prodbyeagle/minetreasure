@@ -1,13 +1,9 @@
 import Image from 'next/image';
 import { Info } from 'lucide-react';
-import type { MT_ITEM } from '@/types/types';
+import type { ItemCardProps } from '@/types/types';
 import { getBlockRangeText, hasModalData } from '../../utils/itemUtils';
 
-interface ItemCardProps {
-    item: MT_ITEM;
-    getItemImage: (item: MT_ITEM) => string;
-    onClick: () => void;
-}
+
 
 export default function ItemCard({ item, getItemImage, onClick }: ItemCardProps) {
     const showModal = hasModalData(item);
@@ -21,7 +17,7 @@ export default function ItemCard({ item, getItemImage, onClick }: ItemCardProps)
         >
             <div className="bg-zinc-100 dark:bg-zinc-900 p-1.5 rounded-md">
                 <Image
-                    src={getItemImage(item)}
+                    src={getItemImage(item) || '/missing_texture_block.png'}
                     alt={item.name || item.type}
                     width={24}
                     height={24}

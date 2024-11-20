@@ -1,24 +1,7 @@
 import RarityFilter from './RarityFilter';
 import BiomeFilter from './BiomeFilter';
 import BlockRangeSlider from './BlockRangeSlider';
-
-interface FilterPanelProps {
-    showFilters: boolean;
-    onToggleFilters: () => void;
-    selectedRarities: string[];
-    onToggleRarity: (rarity: string) => void;
-    biomes: string[];
-    selectedBiomes: string[];
-    onToggleBiome: (biome: string) => void;
-    blockRangeValue: number;
-    onBlockRangeChange: (value: number) => void;
-    displayBlockCount: number;
-    onClearFilters: () => void;
-    viewAllItems: boolean;
-    customItemsOnly: boolean;
-    onToggleCustomItems: () => void;
-    onToggleViewAllItems: () => void;
-}
+import type { FilterPanelProps } from '@/types/types';
 
 export default function FilterPanel({
     showFilters,

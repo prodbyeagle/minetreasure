@@ -1,10 +1,15 @@
-interface BlockRangeSliderProps {
-    value: number;
-    onChange: (value: number) => void;
-    displayBlockCount: number;
-}
+import { useState, useEffect } from 'react';
+import { useDebounce } from '@/hooks/useDebounce';
+import type { BlockRangeSliderProps } from '@/types/types';
 
 export default function BlockRangeSlider({ value, onChange, displayBlockCount }: BlockRangeSliderProps) {
+    const [localValue, setLocalValue] = useState(value);
+    const debouncedValue = useDebounce(localValue, 400);
+
+    useEffect(() => {
+        onChange(debouncedValue);
+    }, [debouncedValue, onChange]);
+
     return (
         <div className="space-y-2 mt-4">
             <div className="flex items-center justify-between">
@@ -19,8 +24,9 @@ export default function BlockRangeSlider({ value, onChange, displayBlockCount }:
                 type="range"
                 min="0"
                 max="500000"
-                value={value}
-                onChange={(e) => onChange(parseInt(e.target.value))}
+                step="1000"
+                value={localValue}
+                onChange={(e) => setLocalValue(parseInt(e.target.value))}
                 className="w-full"
             />
         </div>

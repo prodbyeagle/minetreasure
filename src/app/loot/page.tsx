@@ -150,7 +150,6 @@ export default function LootPage() {
                          />
                     )}
 
-                    {/* Block Chances Display */}
                     <div className="mt-4">
                          <BlockChancesDisplay />
                     </div>

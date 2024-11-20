@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react';
+import type { GitHubData } from '@/types/types';
 
-interface GitHubData {
-     repo_owner: string;
-     repo_name: string;
-     commit_sha: string;
-     commit_ref: string;
-     commit_msg: string;
-}
-
+/**
+ * A hook to perform a GET request to the specified URL.
+ * @param url The URL to fetch.
+ * @returns An array with the first element being the data returned from the fetch,
+ * or null, and the second element being a boolean indicating whether the fetch has completed.
+ */
 const useRequest = (url: string): [GitHubData | null, boolean] => {
      const [data, setData] = useState<GitHubData | null>(null);
      const [loaded, setLoaded] = useState(false);

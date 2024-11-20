@@ -1,19 +1,8 @@
 import { useMemo } from 'react';
-import type { MT_DATA, MT_ITEM } from '@/types/types';
+import type { LootDisplayProps } from '@/types/types';
 import StandardView from './StandardView';
 import GridView from './GridView';
 import ListView from './ListView';
-
-interface LootDisplayProps {
-    data: MT_DATA;
-    viewMode: 'standard' | 'grid' | 'list';
-    getItemImage: (item: MT_ITEM) => string;
-    onItemClick: (item: MT_ITEM) => void;
-    collapsedRarities: Record<string, Record<string, boolean>>;
-    onToggleCollapse: (biome: string, rarity: string) => void;
-    collapsedBiomes: Record<string, boolean>;
-    onToggleBiomeCollapse: (biome: string) => void;
-}
 
 export default function LootDisplay({
     data,

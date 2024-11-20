@@ -2,16 +2,6 @@ import { useMemo, useState } from 'react';
 import rarities from '@/data/rarities.json';
 import initialChances from '@/data/initialChances.json';
 
-export interface BlockChance {
-  blockName: string;
-  chances: {
-    common: number;
-    rare: number;
-    epic: number;
-    legendary: number;
-  };
-}
-
 export const useBlockChances = (decimalPlaces: number = 2) => {
   const [rarityValues, setRarityValues] = useState({
     common: initialChances.common,

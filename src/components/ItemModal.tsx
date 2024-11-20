@@ -2,13 +2,8 @@
 
 import { X } from 'lucide-react';
 import Image from 'next/image';
-import type { MT_ITEM } from '@/types/types';
+import type { ItemModalProps } from '@/types/types';
 
-interface ItemModalProps {
-     item: MT_ITEM;
-     onClose: () => void;
-     getItemImage: (item: MT_ITEM) => string;
-}
 
 export default function ItemModal({ item, onClose, getItemImage }: ItemModalProps) {
      const getBlockRange = () => {

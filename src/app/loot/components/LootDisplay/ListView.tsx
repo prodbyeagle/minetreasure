@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import type { MT_DATA, MT_ITEM } from '@/types/types';
+import type { ListViewProps } from '@/types/types';
 import ItemCard from './ItemCard';
 import { RARITIES } from '../../utils/filterUtils';
 import { useRouter } from 'next/navigation';
@@ -12,16 +12,6 @@ const formatBiomeName = (biome: string) => {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ');
 };
-
-interface ListViewProps {
-    data: MT_DATA;
-    getItemImage: (item: MT_ITEM) => string;
-    onItemClick: (item: MT_ITEM) => void;
-    collapsedRarities: Record<string, Record<string, boolean>>;
-    onToggleCollapse: (biome: string, rarity: string) => void;
-    collapsedBiomes: Record<string, boolean>;
-    onToggleBiomeCollapse: (biome: string) => void;
-}
 
 export default function ListView({
     data,
