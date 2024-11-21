@@ -93,14 +93,11 @@ const Footer = () => {
                             <div className="space-y-2">
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
                                     <Link
-                                        href={`https://github.com/${data.repo_owner}/${data.repo_name}`}
+                                        href={`https://github.com/prodbyeagle/minetreasure`}
                                         className="hover:text-zinc-900 dark:hover:text-white transition-colors"
                                     >
                                         {data.repo_owner}/{data.repo_name}
                                     </Link>
-                                </p>
-                                <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                                    Branch: {data.commit_ref}
                                 </p>
                                 <p className="text-sm text-zinc-600 dark:text-zinc-400">
                                     <Link
@@ -108,7 +105,7 @@ const Footer = () => {
                                         className="hover:text-zinc-900 dark:hover:text-white transition-colors"
                                         title={data.commit_msg}
                                     >
-                                        Commit: {data.commit_sha.slice(0, 7)}
+                                        Commit: {data.commit_ref}@{data.commit_sha.slice(0, 7)}
                                     </Link>
                                 </p>
                             </div>
@@ -119,6 +116,9 @@ const Footer = () => {
                 <div className="mt-8 pt-8 border-t border-zinc-200 dark:border-zinc-800">
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
                         {new Date().getFullYear()} Mine Treasure. All rights reserved.
+                    </p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
+                        made by @prodbyeagle | Orginal Page by: @supercrafter100
                     </p>
                 </div>
             </div>
