@@ -118,7 +118,7 @@ const Footer = () => {
                         {new Date().getFullYear()} Mine Treasure. All rights reserved.
                     </p>
                     <p className="text-sm text-zinc-600 dark:text-zinc-400 text-center">
-                        made by @prodbyeagle | Orginal Page by: @supercrafter100
+                        made by @prodbyeagle | Original Page by: @supercrafter100
                     </p>
                 </div>
             </div>
